@@ -3,6 +3,7 @@
 /node_modules
 /build
 /tmp
+/postgres-data
 
 # Logs
 logs

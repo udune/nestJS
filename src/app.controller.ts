@@ -3,6 +3,9 @@ import { Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './posts/entities/user.entity';
 import { Repository } from 'typeorm';
+import { ProfileModel } from './posts/entities/profile.entity';
+import { PostModel } from './posts/entities/post.entity';
+import { TagModel } from './posts/entities/tag.entity';
 
 @Controller('users')
 export class AppController {
@@ -10,6 +13,12 @@ export class AppController {
   constructor(
     @InjectRepository(UserModel)
     private readonly userRepository: Repository<UserModel>,
+    @InjectRepository(ProfileModel)
+    private readonly profileRepository: Repository<ProfileModel>,
+    @InjectRepository(PostModel)
+    private readonly postRepository: Repository<PostModel>,
+    @InjectRepository(TagModel)
+    private readonly tagRepository: Repository<TagModel>,
   ) {}
 
   // @Get()
@@ -24,7 +33,12 @@ export class AppController {
 
   @Get()
   async getUsers() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      relations: {
+        profile: true,
+        posts: true,
+      },
+    });
   }
 
   @Patch(':id')
@@ -35,7 +49,85 @@ export class AppController {
 
     return this.userRepository.save({
       ...user,
-      title: user?.title + '0',
+    });
+  }
+
+  @Post('user/profile')
+  async createUserProfile() {
+    const user = await this.userRepository.save({
+      email: 'test@example.com',
+    });
+
+    const profile = await this.profileRepository.save({
+      profileImg: 'http://example.com/profile.png',
+      user: user,
+    });
+
+    return profile;
+  }
+
+  @Post('user/post')
+  async createUserAndPosts() {
+    const user = await this.userRepository.save({
+      email: 'test@example.com',
+    });
+
+    await this.postRepository.save({
+      author: user,
+      title: 'post 1',
+    });
+
+    await this.postRepository.save({
+      author: user,
+      title: 'post 2',
+    });
+
+    return user;
+  }
+
+  @Post('posts/tags')
+  async createPostsTags() {
+    const post1 = await this.postRepository.save({
+      title: 'NestJS Lecture',
+    });
+
+    const post2 = await this.postRepository.save({
+      title: 'Programming Lecture',
+    });
+
+    const tag1 = await this.tagRepository.save({
+      name: 'JavaScript',
+      posts: [post1, post2],
+    });
+
+    const tag2 = await this.tagRepository.save({
+      name: 'TypeScript',
+      posts: [post1],
+    });
+
+    await this.postRepository.save({
+      title: 'NextJS Lecture',
+      tags: [tag1, tag2],
+    });
+
+    return true;
+  }
+
+  @Get('posts')
+  async getPosts() {
+    return this.postRepository.find({
+      relations: {
+        tags: true,
+      },
+    });
+  }
+
+  @Get('tags')
+  async getTags() {
+    return this.tagRepository.find({
+      relations: {
+        posts: true,
+      },
     });
   }
 }

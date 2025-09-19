@@ -3,17 +3,17 @@ import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './posts/entities/user.entity';
 import {
-  Between,
-  Equal,
-  ILike,
-  In,
+  // Between,
+  // Equal,
+  // ILike,
+  // In,
   IsNull,
-  LessThan,
-  LessThanOrEqual,
-  Like,
-  MoreThan,
-  MoreThanOrEqual,
-  Not,
+  // LessThan,
+  // LessThanOrEqual,
+  // Like,
+  // MoreThan,
+  // MoreThanOrEqual,
+  // Not,
   Repository,
 } from 'typeorm';
 import { ProfileModel } from './posts/entities/profile.entity';
@@ -40,7 +40,8 @@ export class AppController {
   // }
 
   @Post('sample')
-  async sample() {
+  // async sample() {
+  sample() {
     // // 모델에 해당되는 객체 생성 - 저장은 안 함
     // const user1 = this.userRepository.create({
     //   email: 'test@codefactory.ai',

@@ -30,7 +30,9 @@ export class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   email: string;
 
   // // 제목
@@ -92,7 +94,7 @@ export class UserModel {
     // 저장할때 relation을 한 번에 같이 저장한다.
     cascade: false,
     // null이 가능한지
-    nullable: false,
+    nullable: true,
     // 관게가 삭제됐을때
     // no action -> 아무런 동작을 하지 않는다.
     // cascade -> 참조하는 Row도 같이 삭제한다.

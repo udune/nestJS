@@ -14,6 +14,8 @@ import {
 import { ProfileModel } from './posts/entities/profile.entity';
 import { PostModel } from './posts/entities/post.entity';
 import { TagModel } from './posts/entities/tag.entity';
+import { UsersModule } from './users/users.module';
+import { UsersModel } from './users/entities/users.entity';
 
 @Module({
   imports: [
@@ -37,9 +39,11 @@ import { TagModel } from './posts/entities/tag.entity';
         ProfileModel,
         PostModel,
         TagModel,
+        UsersModel,
       ],
       synchronize: true,
     }),
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
